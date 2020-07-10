@@ -318,68 +318,12 @@ var login = (function () {
     btnSignUP: '.btn__signUP',
   };
 
-  var toggleSignIn = function (email, password) {
-    // Sign in with email and pass.
-    // [START authwithemail]
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // [START_EXCLUDE]
-        if (errorCode === 'auth/wrong-password') {
-          alert('Wrong password.');
-        } else {
-          alert(errorMessage);
-        }
-        console.log(error);
-        // [END_EXCLUDE]
-      })
-      .then((result) => {
-        if (result.operationType === 'signIn') {
-          LoginStatus = true;
-        } else {
-          LoginStatus = false;
-        }
-      });
-    // [END authwithemail]
-  };
-
-  var handleSignUp = function (email, password) {
-    if (password.length < 4) {
-      alert('Please enter a password.');
-      return;
-    }
-    // Create user with email and pass.
-    // [START createwithemail]
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // [START_EXCLUDE]
-        if (errorCode == 'auth/weak-password') {
-          alert('The password is too weak.');
-        } else {
-          alert(errorMessage);
-        }
-        console.log(error);
-        // [END_EXCLUDE]
-      });
-    // [END createwithemail]
-  };
-
   var loginPopup = function () {
     Swal.fire({
       title: 'LOGIN',
       html:
-        '<input type="email" id="username" class="swal2-input" placeholder="Enter your email" required></input>' +
-        '<input type="password" id="password" class="swal2-input" placeholder="Enter your password" required></input>' +
-        '<a href="forgotPasswrod.html" >forgot password</a>',
+        '<input type="text" id="username" class="swal2-input" placeholder="Enter your username"></input>' +
+        '<input type="password" id="password" class="swal2-input" placeholder="Enter your password"></input>',
       confirmButtonText: 'Login',
       preConfirm: () => {
         let username = Swal.getPopup().querySelector('#username').value;
@@ -390,7 +334,9 @@ var login = (function () {
         return { username: username, password: password };
       },
     }).then((result) => {
-      toggleSignIn(result.value.username, result.value.password);
+      // Swal.fire(
+      //   `Username: ${result.value.username}\nPassword: ${result.value.password}`
+      // );
     });
   };
 
@@ -398,9 +344,9 @@ var login = (function () {
     Swal.fire({
       title: 'SIGNUP',
       html:
-        '<input type="email" id="username" class="swal2-input" placeholder="Enter your username" required></input>' +
-        '<input type="password" id="password" class="swal2-input" placeholder="Enter your password" required></input>',
-      confirmButtonText: 'SignUP',
+        '<input type="text" id="username" class="swal2-input" placeholder="Enter your username"></input>' +
+        '<input type="password" id="password" class="swal2-input" placeholder="Enter your password"></input>',
+      confirmButtonText: 'Login',
       preConfirm: () => {
         let username = Swal.getPopup().querySelector('#username').value;
         let password = Swal.getPopup().querySelector('#password').value;
@@ -410,10 +356,9 @@ var login = (function () {
         return { username: username, password: password };
       },
     }).then((result) => {
-      handleSignUp(result.value.username, result.value.password);
-      // Swal.fire(
-      //   `Username: ${result.value.username}\nPassword: ${result.value.password}`
-      // );
+      Swal.fire(
+        `Username: ${result.value.username}\nPassword: ${result.value.password}`
+      );
     });
   };
 

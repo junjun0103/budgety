@@ -327,16 +327,3 @@ h2 {
 .unpaid:hover .item__description {
   font-weight: 900;
 }
-
-/**********************************************
-*** FORGOP PASSWORD
-**********************************************/
-
-.top__forgotPassword {
-  width: 500px;
-  margin: 50px auto;
-  padding-top: 40px;
-}
-.btn__resetPassword {
-  width: 100px;
-}

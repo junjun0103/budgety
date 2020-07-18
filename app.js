@@ -316,6 +316,32 @@ var login = (function () {
   var DOMstrings = {
     btnLogin: '.btn__login',
     btnSignUP: '.btn__signUP',
+    btnLogout: '.btn__logout',
+    checkRemember: 'checkbox',
+    beforeLogin1: '.beforeLogin__signUP',
+    beforeLogin2: '.beforeLogin__login',
+    afterLogin1: '.afterLogin__userID',
+    afterLogin2: '.afterLogin__logout',
+  };
+
+  var navBarBtnChange = function () {
+    document
+      .querySelector(DOMstrings.beforeLogin1)
+      .classList.toggle('inactive');
+    document
+      .querySelector(DOMstrings.beforeLogin2)
+      .classList.toggle('inactive');
+    document.querySelector(DOMstrings.afterLogin1).classList.toggle('inactive');
+    document.querySelector(DOMstrings.afterLogin2).classList.toggle('inactive');
+  };
+
+  var toggleSignOut = function () {
+    // [START signout]
+    firebase.auth().signOut();
+    // [END signout]
+    //end session
+    sessionStorage.clear();
+    navBarBtnChange();
   };
 
   var toggleSignIn = function (email, password) {
@@ -338,10 +364,18 @@ var login = (function () {
         // [END_EXCLUDE]
       })
       .then((result) => {
+        var user = firebase.auth().currentUser;
+        var name, email, uid;
         if (result.operationType === 'signIn') {
-          LoginStatus = true;
+          name = user.displayName;
+          email = user.email;
+          uid = user.uid;
+          //setup session
+          sessionStorage.setItem('email', email);
+          sessionStorage.setItem('uid', uid);
+          // change navbar buttons
+          navBarBtnChange();
         } else {
-          LoginStatus = false;
         }
       });
     // [END authwithemail]
@@ -379,14 +413,19 @@ var login = (function () {
       html:
         '<input type="email" id="username" class="swal2-input" placeholder="Enter your email" required></input>' +
         '<input type="password" id="password" class="swal2-input" placeholder="Enter your password" required></input>' +
-        '<a href="forgotPasswrod.html" >forgot password</a>',
+        '<input type="checkbox" id="checkboxRemember" class="input-remember" placeholder="Enter your password" required></input><label for="checkboxRemember">remember me</label>' +
+        '<br/><a href="forgotPasswrod.html" >forgot password</a>',
       confirmButtonText: 'Login',
       preConfirm: () => {
         let username = Swal.getPopup().querySelector('#username').value;
         let password = Swal.getPopup().querySelector('#password').value;
+        let checkboxRemember = Swal.getPopup().querySelector(
+          '#checkboxRemember'
+        ).value;
         if (username === '' || password === '') {
           Swal.showValidationMessage(`Username/Password empty`);
         }
+        console.log(checkboxRemember);
         return { username: username, password: password };
       },
     }).then((result) => {
@@ -425,6 +464,15 @@ var login = (function () {
       document
         .querySelector(DOMstrings.btnSignUP)
         .addEventListener('click', signUpPopup);
+      document
+        .querySelector(DOMstrings.btnLogout)
+        .addEventListener('click', toggleSignOut);
+    },
+    loginStatus: function () {
+      var n = sessionStorage.getItem('email');
+      if (n !== null) {
+        navBarBtnChange();
+      }
     },
   };
 })();
@@ -528,6 +576,7 @@ var controller = (function (budgetCtrl, UICtrl) {
       });
       setupEventListeners();
       login.setupEventListeners();
+      login.loginStatus();
     },
   };
 })(budgetController, UIController);

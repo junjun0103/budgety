@@ -36,10 +36,15 @@ body {
 /**********************************************
 *** NAVBAR
 **********************************************/
-.btn__login,
-.btn__signUP {
+.btn__noneDeco {
   border: none;
   background-color: transparent;
+}
+.disable ul {
+  display: none;
+}
+.inactive {
+  display: none;
 }
 /**********************************************
 *** TOP PART

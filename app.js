@@ -155,6 +155,17 @@ var UIController = (function () {
     numSplit = num.split('.');
     int = numSplit[0];
 
+    /*
+    var digits = integer.length
+    var commaCount = Math.floor((integer.length - 1) / 3);
+    // Number of commas is always the number of digits minus 1 divided by 3, truncated
+    //Start at the end, and count backwards, placing a comma after every third digit Math.floor((digits - 1) / 3)
+    for (var i = 1; i <= commaCount ; i++) {
+        let loopCount = digits - (3 * i)
+        integer = integer.substr(0, loopCount) + `,` + integer.substr(loopCount)
+    };
+    number = integer + (typeof(numSplit[1]) !== `undefined` ? `.` + numSplit[1] : ``);
+    */
     var addComma = function (number) {
       var count = number.length - 3;
       for (var i = Math.floor((number.length - 1) / 3); i > 0; i--) {
@@ -162,7 +173,6 @@ var UIController = (function () {
         count += -3;
       }
     };
-
     addComma(int);
     dec = numSplit[1];
 
